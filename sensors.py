@@ -11,20 +11,27 @@ class Sensor:
         self.rays = []
         self.readings = []
 
-    def update(self, roadBorders):
+    def update(self, roadBorders, traffic):
         self.castRays()
         self.readings = []
         for i in range(len(self.rays)):
-            self.readings.append(self.getReading(self.rays[i], roadBorders))
+            self.readings.append(self.getReading(self.rays[i], roadBorders, traffic))
     
 
-    def getReading(self, ray, roadBorders):
+    def getReading(self, ray, roadBorders, traffic):
         touches = []
         for i in range(len(roadBorders)):
             touch = getIntersection(ray[0], ray[1], roadBorders[i][0], roadBorders[i][1])
             if touch:
                 touches.append(touch)
         
+        for i in range(len(traffic)):
+            poly = traffic[i].polygon
+            for j in range(len(poly)):
+                value = getIntersection(ray[0], ray[1], poly[j], poly[(j+1)%len(poly)])
+                if value:
+                    touches.append(value)
+
         if len(touches) == 0:
             return 0
         else:

@@ -1,4 +1,5 @@
 import pygame
+
 from utils import *
 class Road:
     def __init__(self, x, width, laneCount = 3):
@@ -29,6 +30,9 @@ class Road:
         ]
 
 
+    def getLaneCenter(self, laneIndex):
+        laneWidth = self.width/self.laneCount
+        return self.left + laneWidth/2 + laneIndex*laneWidth - 15
 
     def draw(self,screen):
         lineWidth = 5

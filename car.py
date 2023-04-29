@@ -5,36 +5,47 @@ from controls import *
 from sensors import *
 
 class Car:
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, controlType, maxSpeed = 5):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+        
 
         self.speed = 0
-        self.maxSpeed = 5
+        self.maxSpeed = maxSpeed
         self.friction = 0.05
         self.acceleration = 0.3
         self.angle = 0
         self.damaged = False
 
-        self.sensor = Sensor(self)
 
-        self.controls = Controls()
-        self.carImage = pygame.transform.scale(pygame.image.load("car2.png").convert_alpha(), (self.width,self.height))
+        if controlType != "DUMMY":
+            self.sensor = Sensor(self)
+            self.carImage = pygame.transform.scale(pygame.image.load("car.png").convert_alpha(), (self.width,self.height))
+        else:
+            self.carImage = pygame.transform.scale(pygame.image.load("car2.png").convert_alpha(), (self.width,self.height))
+        self.controls = Controls(controlType)
     
 
-    def update(self, roadBorders):
+    def update(self, roadBorders, traffic):
         if not self.damaged:
             self.move()
             self.polygon = self.createPolygon()
-            self.damaged = self.assessDamage(roadBorders)
-        self.sensor.update(roadBorders)
+            self.damaged = self.assessDamage(roadBorders, traffic)
+        
+        if hasattr(self, "sensor"):
+            self.sensor.update(roadBorders, traffic)
 
 
-    def assessDamage(self, roadBorders):
+    def assessDamage(self, roadBorders, traffic):
         for i in range(len(roadBorders)):
             if(polysIntersect(self.polygon, roadBorders[i])):
+                # print("BorderCollision")
+                return True
+        for i in range(len(traffic)):
+            if(polysIntersect(self.polygon, traffic[i].polygon)):
+                # print("CarCollision")
                 return True
         return False
     
@@ -100,8 +111,8 @@ class Car:
 
     # function to draw the car on the screen
     def draw(self, screen):
-        
-        self.sensor.draw(screen)
+        if hasattr(self, "sensor"):
+            self.sensor.draw(screen)
         
         temp_rotated_image = pygame.transform.rotate(self.carImage, math.degrees(self.angle))
         carImage_rect = self.carImage.get_rect(center = (self.width/2 + self.x, self.height/2 + translateY(self.y)))

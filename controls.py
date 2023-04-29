@@ -2,13 +2,17 @@ import pygame
 
 class Controls:
 
-    def __init__(self):
+    def __init__(self, type):
         self.forward = False
         self.left = False
         self.right = False
         self.reverse = False
+        self.type = type
     
     def listenToKeyboard(self):
+        if self.type == "DUMMY":
+            self.forward = True
+            return
         keys = pygame.key.get_pressed()
         
         # Right

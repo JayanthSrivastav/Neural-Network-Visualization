@@ -8,10 +8,10 @@ def translateY(y):
 
 def translate(y):
     global translate_y
-    translate_y = y + 280
+    translate_y = y + 200
 
 def getIntersection(A, B, C, D):
-    tTop = (D[0] - C[0]) * (A[0] - C[1]) - (D[1] - C[1]) * (A[0] - C[0])
+    tTop = (D[0] - C[0]) * (A[1] - C[1]) - (D[1] - C[1]) * (A[0] - C[0])
     uTop = (C[1] - A[1]) * (A[0] - B[0]) - (C[0] - A[0]) * (A[1] - B[1])
     bottom = (D[1] - C[1]) * (B[0] - A[0]) - (D[0] - C[0]) * (B[1] - A[1])
 

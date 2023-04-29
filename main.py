@@ -15,8 +15,12 @@ done = False
 clock = pygame.time.Clock()
 
 # Create the car and other elements
-car = Car(85,100,35,55)
 road = Road(100, 200 * 0.9)
+car = Car(road.getLaneCenter(2),100,30,50, "KEYS")
+
+traffic = [
+    Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2)
+]
 
 
 # main game loop
@@ -28,8 +32,14 @@ while not done:
 
     # draw game objects
     screen.fill((211, 211, 211))
+
+    for i in range(len(traffic)):
+        traffic[i].update(road.borders, [])
+
     road.draw(screen)
-    car.update(road.borders)
+    for i in range(len(traffic)):
+        traffic[i].draw(screen)
+    car.update(road.borders, traffic)
     car.draw(screen)
 
     # Camera tracks the car
