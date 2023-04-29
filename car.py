@@ -1,5 +1,6 @@
 import pygame
 import math
+from utils import *
 from controls import *
 
 class Car:
@@ -10,9 +11,9 @@ class Car:
         self.height = height
 
         self.speed = 0
-        self.maxSpeed = 3
+        self.maxSpeed = 5
         self.friction = 0.05
-        self.acceleration = 0.2
+        self.acceleration = 0.3
         self.angle = 0
 
         self.controls = Controls()
@@ -73,7 +74,7 @@ class Car:
     def draw(self, screen):
         
         temp_rotated_image = pygame.transform.rotate(self.carImage, math.degrees(self.angle))
-        carImage_rect = self.carImage.get_rect(center = (self.width/2 + self.x, self.height/2 +self.y))
+        carImage_rect = self.carImage.get_rect(center = (self.width/2 + self.x, self.height/2 + translateY(self.y)))
         rotated_rect = temp_rotated_image.get_rect(center = carImage_rect.center)
         screen.blit(temp_rotated_image, rotated_rect)
 
