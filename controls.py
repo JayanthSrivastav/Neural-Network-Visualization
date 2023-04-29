@@ -13,6 +13,8 @@ class Controls:
         if self.type == "DUMMY":
             self.forward = True
             return
+        elif self.type == "AI":
+            return
         keys = pygame.key.get_pressed()
         
         # Right

@@ -18,14 +18,14 @@ class NeuralNetwork:
 # Level class for input and output layer levels
 class Level:
     def __init__(self, inputCount, outputCount):
-        self.inputs = list(inputCount)
-        self.outputs = list(outputCount)
-        self.biases = list(outputCount)
+        self.inputs = [0] * inputCount
+        self.outputs = [0] * outputCount
+        self.biases = [0] * outputCount
 
-        self.weights = []
+        self.weights = [0] * inputCount
 
         for i in range(inputCount):
-            self.weights[i] = list(outputCount)
+            self.weights[i] = [0] * outputCount 
 
         Level.randomize(self)
 
@@ -37,19 +37,19 @@ class Level:
         for i in range(len(level.biases)):
             level.biases[i] = random()*2 - 1
 
-# Feedforward Algorithm
-def feedForward(givenInputs, level):
-    for i in range(len(level.inputs)):
-        level.inputs[i] = givenInputs[i]
+    # Feedforward Algorithm
+    def feedForward(givenInputs, level):
+        for i in range(len(level.inputs)):
+            level.inputs[i] = givenInputs[i]
 
-    for i in range(len(level.outputs)):
-        s = 0
-        for j in range(len(level.inputs)):
-            s += level.inputs[j] * level.weights[j][i]
+        for i in range(len(level.outputs)):
+            s = 0
+            for j in range(len(level.inputs)):
+                s += level.inputs[j] * level.weights[j][i]
 
-        if(s>level.biases[i]): # if(s + level.biases[i]>0):
-            level.outputs[i] = 1
-        else:
-            level.outputs[i] = 0
+            if(s>level.biases[i]): # if(s + level.biases[i]>0):
+                level.outputs[i] = 1
+            else:
+                level.outputs[i] = 0
 
-    return level.outputs
+        return level.outputs

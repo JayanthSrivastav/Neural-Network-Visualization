@@ -3,6 +3,8 @@ import math
 from utils import *
 from controls import *
 from sensors import *
+from network import *
+
 
 class Car:
     def __init__(self, x, y, width, height, controlType, maxSpeed = 5):
@@ -19,12 +21,21 @@ class Car:
         self.angle = 0
         self.damaged = False
 
+        
 
         if controlType != "DUMMY":
             self.sensor = Sensor(self)
+            self.brain = NeuralNetwork(
+                [self.sensor.rayCount, 6, 4]
+            )
             self.carImage = pygame.transform.scale(pygame.image.load("car.png").convert_alpha(), (self.width,self.height))
         else:
             self.carImage = pygame.transform.scale(pygame.image.load("car2.png").convert_alpha(), (self.width,self.height))
+        
+        if controlType == "AI":
+            self.useBrain = True
+        else:
+            self.useBrain = False
         self.controls = Controls(controlType)
     
 
@@ -36,6 +47,23 @@ class Car:
         
         if hasattr(self, "sensor"):
             self.sensor.update(roadBorders, traffic)
+            offsets = []
+            for r in self.sensor.readings:
+                if r == 0:
+                    offsets.append(0)
+                else:
+                    offsets.append(1 - r[2])
+            
+            outputs = NeuralNetwork.feedForward(offsets, self.brain)
+            # print(outputs)
+
+            if self.useBrain:
+                self.controls.forward = outputs[0]
+                self.controls.left = outputs[1]
+                self.controls.right = outputs[2]
+                self.controls.reverse = outputs[3]
+                print(self.controls.forward, self.controls.left, self.controls.right, self.controls.reverse)
+
 
 
     def assessDamage(self, roadBorders, traffic):
