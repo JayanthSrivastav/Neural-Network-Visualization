@@ -39,4 +39,4 @@ class Road:
                 for j in range(translateY(self.top), translateY(self.bottom), self.dashLength + self.gapLength):
                     pygame.draw.line(screen, (255,255,255), (x, j), (x, j+self.dashLength), lineWidth)
             else:
-                 pygame.draw.line(screen, (255,255,255), (x, translateY(self.top)), (x, translateY(self.bottom)), lineWidth)
+                pygame.draw.line(screen, (255,255,255), (x, translateY(self.top)), (x, translateY(self.bottom)), lineWidth)

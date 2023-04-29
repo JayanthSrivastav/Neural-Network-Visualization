@@ -29,8 +29,8 @@ while not done:
     # draw game objects
     screen.fill((211, 211, 211))
     road.draw(screen)
+    car.update(road.borders)
     car.draw(screen)
-    car.update()
 
     # Camera tracks the car
     translate(int(-car.y))
