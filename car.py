@@ -16,7 +16,6 @@ class Car:
         self.angle = 0
 
         self.controls = Controls()
-        # self.carImage = pygame.image.load("car2.png").convert_alpha()
         self.carImage = pygame.transform.scale(pygame.image.load("car2.png").convert_alpha(), (self.width,self.height))
     
 
@@ -47,10 +46,10 @@ class Car:
             self.speed = 0
 
         # Right and Left Steering. When the speed is either greater or lower than 0, the Steering works.
-        if self.controls.right and (self.speed>0 or self.speed<0):
+        if self.controls.right:
             self.angle -= 0.033
     
-        if self.controls.left and (self.speed>0 or self.speed<0):
+        if self.controls.left:
             self.angle += 0.033
 
         #print("Speed: ", self.speed, "Angle: ", self.angle)
@@ -65,13 +64,7 @@ class Car:
     def draw(self, screen):
         
         temp_rotated_image = pygame.transform.rotate(self.carImage, math.degrees(self.angle))
-        center = temp_rotated_image.get_rect().center
-        screen.blit(temp_rotated_image, (self.x- self.width/2 , self.y - self.height/2))
+        carImage_rect = self.carImage.get_rect(center = (self.width/2 + self.x, self.height/2 +self.y))
+        rotated_rect = temp_rotated_image.get_rect(center = carImage_rect.center)
+        screen.blit(temp_rotated_image, rotated_rect)
 
-        # self.angle += 0.01               # This is the the code I wrote to just debug. It should not be here!!
-        # screen.blit(pygame.transform.rotate(self.carImage, math.degrees(self.angle)), self.carImage.get_rect(center = (self.x -self.width/2, self.y - self.height/2)))
-        # pygame.draw.rect(screen, (0,0,0), pygame.Rect(
-        #     self.x - self.width/2,
-        #     self.y - self.height/2,
-        #     self.width,
-        #     self.height))
