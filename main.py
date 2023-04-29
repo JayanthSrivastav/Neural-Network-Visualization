@@ -31,7 +31,10 @@ while not done:
     road.draw(screen)
     car.draw(screen)
     car.update()
+
+    # Camera tracks the car
     translate(int(-car.y))
+    
     # update screen
     pygame.display.flip()
 
