@@ -1,6 +1,6 @@
 import pygame
 from car import *
-
+from road import *
 
 # initialize Pygame
 pygame.init()
@@ -14,9 +14,9 @@ pygame.display.set_caption("Neural Network")
 done = False
 clock = pygame.time.Clock()
 
-# Create the car and its controls
-car = Car(100,100,30,50)
-
+# Create the car and other elements
+car = Car(100,100,35,55)
+road = Road(100, 200 * 0.9)
 
 
 # main game loop
@@ -28,6 +28,7 @@ while not done:
 
     # draw game objects
     screen.fill((211, 211, 211))
+    road.draw(screen)
     car.draw(screen)
     car.update()
 

@@ -19,7 +19,7 @@ class Car:
         self.carImage = pygame.transform.scale(pygame.image.load("car2.png").convert_alpha(), (self.width,self.height))
     
 
-    def update(self):
+    def move(self):
         self.controls.listenToKeyboard()
 
         # Forward Acceleration
@@ -45,12 +45,19 @@ class Car:
         if abs(self.speed) < self.friction:
             self.speed = 0
 
+        flip = 0
+        if self.speed != 0:
+            if self.speed > 0:
+                flip = 1
+            else:
+                flip = -1
+
         # Right and Left Steering. When the speed is either greater or lower than 0, the Steering works.
         if self.controls.right:
-            self.angle -= 0.033
+            self.angle -= 0.033 * flip
     
         if self.controls.left:
-            self.angle += 0.033
+            self.angle += 0.033 * flip
 
         #print("Speed: ", self.speed, "Angle: ", self.angle)
 
@@ -58,7 +65,9 @@ class Car:
         self.y -= math.cos(self.angle) * self.speed
 
         self.controls.resetKeys()
-        
+
+    def update(self):
+        self.move()
 
     # function to draw the car on the screen
     def draw(self, screen):
