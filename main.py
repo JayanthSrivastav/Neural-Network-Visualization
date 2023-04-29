@@ -16,7 +16,7 @@ clock = pygame.time.Clock()
 
 # Create the car and other elements
 road = Road(100, 200 * 0.9)
-car = Car(road.getLaneCenter(2),100,30,50, "AI")
+car = Car(road.getLaneCenter(2),100,30,50, "KEYS")
 
 traffic = [
     Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2)
