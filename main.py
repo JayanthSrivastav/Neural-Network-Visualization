@@ -15,7 +15,7 @@ done = False
 clock = pygame.time.Clock()
 
 # Create the car and other elements
-car = Car(100,100,35,55)
+car = Car(85,100,35,55)
 road = Road(100, 200 * 0.9)
 
 
@@ -34,7 +34,7 @@ while not done:
 
     # Camera tracks the car
     translate(int(-car.y))
-    
+
     # update screen
     pygame.display.flip()
 
