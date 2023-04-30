@@ -104,8 +104,13 @@ while not done:
         # Check collisions with borders
         car.update(road.borders, traffic)
         # Draw the car on the screen
+        car.carImage.set_alpha(50)
+        # Draw the car on the screen
         car.draw(screen)
-    
+        
+    # Draw the best car on the screen
+    bestCar.carImage.set_alpha(255)
+    # Draw the car on the screen
     bestCar.draw(screen, True)
 
     # Camera tracks the car
