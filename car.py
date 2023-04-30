@@ -142,8 +142,8 @@ class Car:
 
 
     # function to draw the car on the screen
-    def draw(self, screen):
-        if hasattr(self, "sensor"):
+    def draw(self, screen, drawSensor = False):
+        if hasattr(self, "sensor") and drawSensor:
             self.sensor.draw(screen)
             # print(self.brain.levels[0].inputs)
         
