@@ -6,7 +6,7 @@ from road import *
 pygame.init()
 
 # set up screen
-size = (200, 400)
+size = (400, 400)
 screen = pygame.display.set_mode(size, pygame.SRCALPHA)
 pygame.display.set_caption("Neural Network")
 
@@ -16,10 +16,16 @@ clock = pygame.time.Clock()
 
 # Create the car and other elements
 road = Road(100, 200 * 0.9)
-car = Car(road.getLaneCenter(2),100,30,50, "KEYS")
+car = Car(road.getLaneCenter(2),100,30,50, "AI")
 
+# All the cars in the traffic will be in this array
 traffic = [
-    Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2)
+    Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2),
+    Car(road.getLaneCenter(0), -200, 30, 50, "DUMMY", 2),
+    Car(road.getLaneCenter(2), -300, 30, 50, "DUMMY", 2),
+    Car(road.getLaneCenter(1), -400, 30, 50, "DUMMY", 2),
+    Car(road.getLaneCenter(0), -600, 30, 50, "DUMMY", 2)
+
 ]
 
 
