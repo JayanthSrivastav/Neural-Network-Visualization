@@ -79,7 +79,7 @@ class Car:
                 return True
         for i in range(len(traffic)):
             if(polysIntersect(self.polygon, traffic[i].polygon)):
-                # print("CarCollision")
+                #print("CarCollision")
                 self.carImage.set_alpha(50)
                 return True
         return False

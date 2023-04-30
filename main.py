@@ -104,7 +104,7 @@ while not done:
     translate(int(-bestCar.y))
 
     # Visualisation Of Network
-    Visualizer.drawNetwork(screen, car.brain)
+    Visualizer.drawNetwork(screen, bestCar.brain)
     
     # update screen
     pygame.display.flip()
