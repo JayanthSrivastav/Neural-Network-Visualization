@@ -17,7 +17,24 @@ clock = pygame.time.Clock()
 
 # Create the car and other elements
 road = Road(100, 200 * 0.9)
-car = Car(road.getLaneCenter(2),100,30,50, "KEYS")
+
+# Function to save weights.
+def save():
+    with open('weight.txt', 'w') as w:
+        save_dic = {'levels': ([vars(bestCar.brain.levels[0]), vars(bestCar.brain.levels[1])])}
+        w.write(str(save_dic))
+        w.close()
+        
+# Function to generate N cars.
+def generateCars(N):
+    cars = []
+    for i in range(N):
+        cars.append(Car(road.getLaneCenter(1),100,30,50, "AI"))
+    return cars
+
+N = 100
+cars = generateCars(N)
+bestCar = cars[0]
 
 # All the cars in the traffic will be in this array
 traffic = [
@@ -35,6 +52,9 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_s:
+                save()
 
     # draw game objects
     screen.fill((211, 211, 211))
@@ -50,13 +70,38 @@ while not done:
     for i in range(len(traffic)):
         traffic[i].draw(screen)
     
-    # Check collisions with borders
-    car.update(road.borders, traffic)
-    # Draw the car on the screen
-    car.draw(screen)
-    
-    # Camera tracks the car
-    translate(int(-car.y))
+    # Function to find the best car among N cars. Best car is the car which is on the lead.
+    # Try to modify this logic if possible, it works greatly but I feel two lists are unnecessary.
+    def findBestCar(cars):
+        new = []
+        new2 = []
+        for i in cars:
+            new.append(i)
+            new2.append(i.y)
+
+        c = new[new2.index(min(new2))]
+
+        return c
+
+    # Best Car.
+    bestCar = findBestCar(cars)
+    #print(bestCar)
+
+    # To update N cars.
+    for i in range(len(cars)):
+        cars[i].update(road.borders, traffic)
+
+    # To draw N cars and set their transparency to 50.
+    for i in range(len(cars)):
+        cars[i].carImage.set_alpha(50)
+        cars[i].draw(screen)
+
+    # To draw the best car and set its transparency to 255.
+    bestCar.carImage.set_alpha(255)
+    bestCar.draw(screen, True)
+
+    # Camera tracks the best car.
+    translate(int(-bestCar.y))
 
     # Visualisation Of Network
     Visualizer.drawNetwork(screen, car.brain)
