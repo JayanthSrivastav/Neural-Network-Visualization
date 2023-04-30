@@ -32,6 +32,7 @@ class Car:
             self.carImage = pygame.transform.scale(pygame.image.load("car.png").convert_alpha(), (self.width,self.height))
         else:
             self.carImage = pygame.transform.scale(pygame.image.load("car2.png").convert_alpha(), (self.width,self.height))
+            
         
         if controlType == "AI":
             self.useBrain = True
@@ -74,10 +75,12 @@ class Car:
         for i in range(len(roadBorders)):
             if(polysIntersect(self.polygon, roadBorders[i])):
                 # print("BorderCollision")
+                self.carImage.set_alpha(50)
                 return True
         for i in range(len(traffic)):
             if(polysIntersect(self.polygon, traffic[i].polygon)):
                 # print("CarCollision")
+                self.carImage.set_alpha(50)
                 return True
         return False
     
@@ -142,8 +145,8 @@ class Car:
 
 
     # function to draw the car on the screen
-    def draw(self, screen):
-        if hasattr(self, "sensor"):
+    def draw(self, screen, drawSensor=False):
+        if hasattr(self, "sensor") and drawSensor==True:
             self.sensor.draw(screen)
             # print(self.brain.levels[0].inputs)
         
