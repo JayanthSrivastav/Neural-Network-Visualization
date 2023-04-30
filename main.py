@@ -56,7 +56,8 @@ if os.path.exists('weight.json'):
         cars[i].brain.levels[1].weights = data['levels'][1]['weights']
         cars[i].brain.levels[1].biases = data['levels'][1]['biases']
 
-        # Genetic Algorithm
+        # Genetic Algorithm.
+        # Remove this part to see all carsgo in unison following the saved weights.
         if i!=0:
             NeuralNetwork.mutate(bestCar.brain, 0.1)
 
