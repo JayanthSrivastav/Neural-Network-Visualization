@@ -2,6 +2,9 @@ import pygame
 from car import *
 from road import *
 from visualizer import *
+import os
+import json
+import threading
 
 # initialize Pygame
 pygame.init()
@@ -20,10 +23,13 @@ road = Road(100, 200 * 0.9)
 
 # Function to save weights.
 def save():
-    with open('weight.txt', 'w') as w:
+    with open('weight.json', 'w') as w:
         save_dic = {'levels': ([vars(bestCar.brain.levels[0]), vars(bestCar.brain.levels[1])])}
-        w.write(str(save_dic))
-        w.close()
+        #w.write(str(save_dic))
+        #w.close()
+        js = json.dumps(save_dic)
+        w.write(js)
+        w.close
         
 # Function to generate N cars.
 def generateCars(N):
@@ -35,6 +41,24 @@ def generateCars(N):
 N = 100
 cars = generateCars(N)
 bestCar = cars[0]
+if os.path.exists('weight.json'):
+    with open('weight.json', 'r') as f:
+        data = json.load(f)
+        f.close()
+    for i in range(len(cars)):
+        cars[i].brain.levels[0].inputs = data['levels'][0]['inputs']
+        cars[i].brain.levels[0].outputs = data['levels'][0]['outputs']
+        cars[i].brain.levels[0].weights = data['levels'][0]['weights']
+        cars[i].brain.levels[0].biases = data['levels'][0]['biases']
+
+        cars[i].brain.levels[1].inputs = data['levels'][1]['inputs']
+        cars[i].brain.levels[1].outputs = data['levels'][1]['outputs']
+        cars[i].brain.levels[1].weights = data['levels'][1]['weights']
+        cars[i].brain.levels[1].biases = data['levels'][1]['biases']
+
+        # Genetic Algorithm
+        if i!=0:
+            NeuralNetwork.mutate(bestCar.brain, 0.1)
 
 # All the cars in the traffic will be in this array
 traffic = [
