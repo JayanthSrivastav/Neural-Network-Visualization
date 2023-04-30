@@ -1,3 +1,5 @@
+import math
+
 translate_y = 0
 
 def lerp(A, B, t):
@@ -28,3 +30,21 @@ def polysIntersect(poly1, poly2):
             if touch:
                 return True
     return False
+
+def getRGBA(value):
+    alpha = math.fabs(value)
+    if value < 0: 
+        R = 0
+        B = 255
+    else: 
+        R = 255
+        B = 0
+    G = R
+    # return (int(alpha * 255), int(alpha * 255), int(alpha * 255))
+    # return((int(255 - (R - (R * (alpha*255/255)))), int(255 -( G - (G * (alpha*255/255)))), int(255 -(B - (B * (alpha*255/255))))))
+    return (int(R - (R * ((1-alpha)*255/255))), int( G - (G * ((1-alpha)*255/255))), int(B - (B * ((1-alpha)*255/255))))
+    # if value > 0:
+    #     return (255,255,255)
+    # else:
+    #     return( 0,0,0)
+    # return (int(R), int(G), int(B))

@@ -1,12 +1,13 @@
 import pygame
 from car import *
 from road import *
+from visualizer import *
 
 # initialize Pygame
 pygame.init()
 
 # set up screen
-size = (400, 400)
+size = (600, 400)
 screen = pygame.display.set_mode(size, pygame.SRCALPHA)
 pygame.display.set_caption("Neural Network")
 
@@ -16,7 +17,7 @@ clock = pygame.time.Clock()
 
 # Create the car and other elements
 road = Road(100, 200 * 0.9)
-car = Car(road.getLaneCenter(2),100,30,50, "AI")
+car = Car(road.getLaneCenter(2),100,30,50, "KEYS")
 
 # All the cars in the traffic will be in this array
 traffic = [
@@ -25,7 +26,6 @@ traffic = [
     Car(road.getLaneCenter(2), -300, 30, 50, "DUMMY", 2),
     Car(road.getLaneCenter(1), -400, 30, 50, "DUMMY", 2),
     Car(road.getLaneCenter(0), -600, 30, 50, "DUMMY", 2)
-
 ]
 
 
@@ -39,18 +39,28 @@ while not done:
     # draw game objects
     screen.fill((211, 211, 211))
 
+    # Check borders for all cars in traffic
     for i in range(len(traffic)):
         traffic[i].update(road.borders, [])
 
+    # Draw the road on the screen
     road.draw(screen)
+
+    # Draw all the cars in the traffic
     for i in range(len(traffic)):
         traffic[i].draw(screen)
+    
+    # Check collisions with borders
     car.update(road.borders, traffic)
+    # Draw the car on the screen
     car.draw(screen)
-
+    
     # Camera tracks the car
     translate(int(-car.y))
 
+    # Visualisation Of Network
+    Visualizer.drawNetwork(screen, car.brain)
+    
     # update screen
     pygame.display.flip()
 

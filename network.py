@@ -10,7 +10,7 @@ class NeuralNetwork:
     def feedForward(givenInputs, network):
         outputs = Level.feedForward(givenInputs, network.levels[0])
         
-        for i in range(len(network.levels)):
+        for i in range(1,len(network.levels)):
             outputs = Level.feedForward(outputs, network.levels[i])
 
         return outputs
@@ -39,9 +39,10 @@ class Level:
 
     # Feedforward Algorithm
     def feedForward(givenInputs, level):
+
         for i in range(len(level.inputs)):
             level.inputs[i] = givenInputs[i]
-
+        # print(givenInputs)
         for i in range(len(level.outputs)):
             s = 0
             for j in range(len(level.inputs)):

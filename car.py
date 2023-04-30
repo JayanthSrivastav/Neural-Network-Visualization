@@ -28,6 +28,7 @@ class Car:
             self.brain = NeuralNetwork(
                 [self.sensor.rayCount, 6, 4]
             )
+            # print(self.brain.levels[0].inputs)
             self.carImage = pygame.transform.scale(pygame.image.load("car.png").convert_alpha(), (self.width,self.height))
         else:
             self.carImage = pygame.transform.scale(pygame.image.load("car2.png").convert_alpha(), (self.width,self.height))
@@ -40,6 +41,7 @@ class Car:
     
 
     def update(self, roadBorders, traffic):
+        
         if not self.damaged:
             self.move()
             self.polygon = self.createPolygon()
@@ -54,7 +56,9 @@ class Car:
                 else:
                     offsets.append(1 - r[2])
             
+            # print("Offsets: ", offsets)
             outputs = NeuralNetwork.feedForward(offsets, self.brain)
+
             # print(outputs)
 
             if self.useBrain:
@@ -62,7 +66,7 @@ class Car:
                 self.controls.left = outputs[1]
                 self.controls.right = outputs[2]
                 self.controls.reverse = outputs[3]
-                print(self.controls.forward, self.controls.left, self.controls.right, self.controls.reverse)
+                # print(self.controls.forward, self.controls.left, self.controls.right, self.controls.reverse)
 
 
 
@@ -141,6 +145,7 @@ class Car:
     def draw(self, screen):
         if hasattr(self, "sensor"):
             self.sensor.draw(screen)
+            # print(self.brain.levels[0].inputs)
         
         temp_rotated_image = pygame.transform.rotate(self.carImage, math.degrees(self.angle))
         carImage_rect = self.carImage.get_rect(center = (self.width/2 + self.x, self.height/2 + translateY(self.y)))
