@@ -17,7 +17,7 @@ class Car:
         self.speed = 0
         self.maxSpeed = maxSpeed
         self.friction = 0.05
-        self.acceleration = 0.3
+        self.acceleration = 0.5
         self.angle = 0
         self.damaged = False
 
@@ -28,7 +28,6 @@ class Car:
             self.brain = NeuralNetwork(
                 [self.sensor.rayCount, 6, 4]
             )
-            # print(self.brain.levels[0].inputs)
             self.carImage = pygame.transform.scale(pygame.image.load("car.png").convert_alpha(), (self.width,self.height))
         else:
             self.carImage = pygame.transform.scale(pygame.image.load("car2.png").convert_alpha(), (self.width,self.height))
@@ -56,28 +55,25 @@ class Car:
                 else:
                     offsets.append(1 - r[2])
             
-            # print("Offsets: ", offsets)
             outputs = NeuralNetwork.feedForward(offsets, self.brain)
-
-            # print(outputs)
 
             if self.useBrain:
                 self.controls.forward = outputs[0]
                 self.controls.left = outputs[1]
                 self.controls.right = outputs[2]
                 self.controls.reverse = outputs[3]
-                # print(self.controls.forward, self.controls.left, self.controls.right, self.controls.reverse)
 
 
-
+    # Car Collision Function.
     def assessDamage(self, roadBorders, traffic):
         for i in range(len(roadBorders)):
             if(polysIntersect(self.polygon, roadBorders[i])):
-                # print("BorderCollision")
+                self.carImage.set_alpha(50)
                 return True
+            
         for i in range(len(traffic)):
             if(polysIntersect(self.polygon, traffic[i].polygon)):
-                # print("CarCollision")
+                self.carImage.set_alpha(50)
                 return True
         return False
     
@@ -103,7 +99,8 @@ class Car:
         # Reverse Acceleration
         if self.controls.reverse:
             self.speed -= self.acceleration
-        
+
+        # Speed
         if self.speed > self.maxSpeed:
             self.speed = self.maxSpeed
 
@@ -133,29 +130,19 @@ class Car:
         if self.controls.left:
             self.angle += 0.033 * flip
 
-        #print("Speed: ", self.speed, "Angle: ", self.angle)
-
         self.x -= math.sin(self.angle) * self.speed
         self.y -= math.cos(self.angle) * self.speed
 
         self.controls.resetKeys()
 
 
-    # function to draw the car on the screen
+    # Function to draw the car on the screen.
     def draw(self, screen, drawSensor = False):
         if hasattr(self, "sensor") and drawSensor:
             self.sensor.draw(screen)
-            # print(self.brain.levels[0].inputs)
         
         temp_rotated_image = pygame.transform.rotate(self.carImage, math.degrees(self.angle))
         carImage_rect = self.carImage.get_rect(center = (self.width/2 + self.x, self.height/2 + translateY(self.y)))
         rotated_rect = temp_rotated_image.get_rect(center = carImage_rect.center)
         screen.blit(temp_rotated_image, rotated_rect)
 
-        # for i in range(len(self.polygon)):
-        #     pygame.draw.line(screen, (0, 0, 0), (self.polygon[i][0], self.polygon[i][1]), (self.polygon[(i+1)%len(self.polygon)][0], self.polygon[(i+1)%len(self.polygon)][1]), 10)
-                
-        # if not self.damaged:
-        #     print("Alive")
-        # else:
-        #     print("Dead")
