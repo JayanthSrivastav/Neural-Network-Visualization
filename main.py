@@ -59,7 +59,7 @@ if os.path.exists('weight.json'):
         # Genetic Algorithm.
         # Remove this part to see all carsgo in unison following the saved weights.
         if i!=0:
-            NeuralNetwork.mutate(bestCar.brain, 0.1)
+            NeuralNetwork.mutate(cars[i].brain, 0.1)
 
 # All the cars in the traffic will be in this array
 traffic = [
