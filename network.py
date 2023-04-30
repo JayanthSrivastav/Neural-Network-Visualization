@@ -1,4 +1,6 @@
 from random import random
+from utils import *
+
 
 # Main NeuralNetwork class
 class NeuralNetwork:
@@ -14,6 +16,14 @@ class NeuralNetwork:
             outputs = Level.feedForward(outputs, network.levels[i])
 
         return outputs
+
+    def mutate(network, amount = 1):
+        for k in range(len(network.levels)):
+            for i in range(len(network.levels[k].biases)):
+                network.levels[k].biases[i] = lerp(network.levels[k].biases[i], random() * 2 - 1, amount)
+            for i in range(len(network.levels[k].weights)):
+                for j in range(len(network.levels[k].weights[i])):
+                    network.levels[k].weights[i][j] = lerp(network.levels[k].weights[i][j], random() * 2 - 1, amount)
 
 # Level class for input and output layer levels
 class Level:

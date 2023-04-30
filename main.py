@@ -5,9 +5,12 @@ from visualizer import *
 import pickle
 
 
+showOnlyBestCar = 0
+carsPerGeneration = 500
+
 def generateCars(N):
     cars = []
-    for i in range(1, N):
+    for i in range(1, N+1):
         cars.append( Car(road.getLaneCenter(1),100,30,50,"AI"))
     return cars
 
@@ -37,8 +40,24 @@ clock = pygame.time.Clock()
 road = Road(100, 200 * 0.9)
 # car = Car(road.getLaneCenter(2),100,30,50, "KEYS")
 
-cars = generateCars(100)
+if showOnlyBestCar:
+    cars = generateCars(1)
+else:
+    cars = generateCars(carsPerGeneration)
 bestCar = cars[0]
+try:
+    with open("bestCar.pickle", "rb") as f:
+        bestCar.brain = pickle.load(f)
+    for i in range(len(cars)):
+        cars[i].brain = bestCar.copy()
+
+        if i != 0:
+            NeuralNetwork.mutate(cars[i].brain, 0.9)
+    
+    print(len(cars))
+except:
+    pass
+
 # All the cars in the traffic will be in this array
 traffic = [
     Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2),
@@ -47,26 +66,6 @@ traffic = [
     Car(road.getLaneCenter(1), -400, 30, 50, "DUMMY", 2),
     Car(road.getLaneCenter(0), -600, 30, 50, "DUMMY", 2)
 ]
-
-try:
-    with open("bestCar.pickle", "rb") as f:
-        bestCar.brain = pickle.load(f)
-except:
-    pass
-
-
-
-
-# button_width = 25
-# button_height = 25
-# button_color = (100, 100, 100)
-# button_rect = pygame.Rect(180 - button_width/2, 390 - button_height, button_width, button_height)
-# button_text = "R"
-# font = pygame.font.Font(None, 36)
-# text = font.render(button_text, True, (0, 0, 0))
-# text_rect = text.get_rect(center=button_rect.center)
-
-
 
 
 
@@ -94,7 +93,6 @@ while not done:
 
     
     yMin = 1000000
-    bestCar = cars[0]
     for car in cars:
         if car.y < yMin:
             yMin = car.y
