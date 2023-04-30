@@ -75,7 +75,11 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-            save()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_s:
+                save()
+            if event.key == pygame.K_d:
+                discard()
 
     # draw game objects
     screen.fill((211, 211, 211))
