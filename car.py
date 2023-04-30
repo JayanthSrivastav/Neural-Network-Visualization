@@ -17,7 +17,7 @@ class Car:
         self.speed = 0
         self.maxSpeed = maxSpeed
         self.friction = 0.05
-        self.acceleration = 0.3
+        self.acceleration = 0.5
         self.angle = 0
         self.damaged = False
 
