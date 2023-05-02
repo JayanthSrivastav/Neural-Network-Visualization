@@ -6,6 +6,7 @@ import pickle
 
 
 showOnlyBestCar = 0
+randomInfiniteTraffic = 1
 carsPerGeneration = 500
 
 def generateCars(N):
@@ -49,22 +50,32 @@ try:
     with open("bestCar.pickle", "rb") as f:
         bestCar.brain = pickle.load(f)
     for i in range(len(cars)):
-        cars[i].brain = bestCar.copy()
-
+        for l in range(len(cars[i].brain.levels)):
+            cars[i].brain.levels[l].inputs = bestCar.brain.levels[l].inputs.copy()
+            cars[i].brain.levels[l].outputs = bestCar.brain.levels[l].outputs.copy()
+            cars[i].brain.levels[l].biases = bestCar.brain.levels[l].biases.copy()
+            for w in range(len(cars[i].brain.levels[l].weights)):
+                cars[i].brain.levels[l].weights[w] = bestCar.brain.levels[l].weights[w].copy()
         if i != 0:
-            NeuralNetwork.mutate(cars[i].brain, 0.9)
+            NeuralNetwork.mutate(cars[i].brain, 0.1)
+            # if temp == cars[i].brain.levels:
+            #     print("Same")
+            # else:
+            #     print("Different")
     
     print(len(cars))
 except:
-    pass
+    print("Failed")
 
 # All the cars in the traffic will be in this array
 traffic = [
     Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2),
     Car(road.getLaneCenter(0), -200, 30, 50, "DUMMY", 2),
     Car(road.getLaneCenter(2), -300, 30, 50, "DUMMY", 2),
-    Car(road.getLaneCenter(1), -400, 30, 50, "DUMMY", 2),
-    Car(road.getLaneCenter(0), -600, 30, 50, "DUMMY", 2)
+    Car(road.getLaneCenter(0), -500, 30, 50, "DUMMY", 2),
+    Car(road.getLaneCenter(1), -600, 30, 50, "DUMMY", 2),
+
+
 ]
 
 
@@ -83,6 +94,12 @@ while not done:
 
     # draw game objects
     screen.fill((211, 211, 211))
+
+    if randomInfiniteTraffic:
+        for c in range(len(traffic)):
+            if traffic[c].y - bestCar.y > 200:
+                traffic[c].x = road.getLaneCenter(int(random()*3))
+                traffic[c].y = bestCar.y - 400
 
     # Check borders for all cars in traffic
     for i in range(len(traffic)):
@@ -111,14 +128,14 @@ while not done:
     # Draw the best car on the screen
     bestCar.carImage.set_alpha(255)
     # Draw the car on the screen
-    bestCar.draw(screen, True)
+    bestCar.draw(screen, not (showOnlyBestCar == 1))
 
     # Camera tracks the car
     translate(int(-bestCar.y))
 
     # Visualisation Of Network
     Visualizer.drawNetwork(screen, bestCar.brain)
-    
+
     # pygame.draw.rect(screen, button_color, button_rect)
     # screen.blit(text, text_rect)
     

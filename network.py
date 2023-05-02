@@ -25,6 +25,8 @@ class NeuralNetwork:
                 for j in range(len(network.levels[k].weights[i])):
                     network.levels[k].weights[i][j] = lerp(network.levels[k].weights[i][j], random() * 2 - 1, amount)
 
+
+
 # Level class for input and output layer levels
 class Level:
     def __init__(self, inputCount, outputCount):
