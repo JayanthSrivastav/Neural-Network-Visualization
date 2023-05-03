@@ -41,6 +41,6 @@ class Road:
             x = lerp(self.left, self.right, i/self.laneCount)
             if i > 0 and i < self.laneCount:
                 for j in range(translateY(self.top), translateY(self.bottom), self.dashLength + self.gapLength):
-                    pygame.draw.line(screen, (255,255,255), (x, j), (x, j+self.dashLength), lineWidth)
+                    pygame.draw.line(screen, (255,255,255), (x+400, j), (x+400, j+self.dashLength), lineWidth)
             else:
-                pygame.draw.line(screen, (255,255,255), (x, translateY(self.top)), (x, translateY(self.bottom)), lineWidth)
+                pygame.draw.line(screen, (255,255,255), (x+400, translateY(self.top)), (x+400, translateY(self.bottom)), lineWidth)

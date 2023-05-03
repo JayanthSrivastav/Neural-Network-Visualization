@@ -13,7 +13,7 @@ class Visualizer:
         levelHeight = height/len(network.levels)
         
         # draw the black background
-        pygame.draw.rect(screen, (0,0,0), pygame.Rect(200,0,400,400))
+        pygame.draw.rect(screen, (0,0,0), pygame.Rect(0,0,400,400))
         
         for i in range(len(network.levels)-1, -1, -1):
             if len(network.levels) == 1:
@@ -44,17 +44,17 @@ class Visualizer:
         for i in range(len(inputs)):
             for j in range(len(outputs)):
                 value = weights[i][j]
-                pygame.draw.line(screen, getRGBA(value), (Visualizer.getNodeX(inputs, i, left, right) + 200, bottom), (Visualizer.getNodeX(outputs, j, left, right)+ 200, top))
+                pygame.draw.line(screen, getRGBA(value), (Visualizer.getNodeX(inputs, i, left, right), bottom), (Visualizer.getNodeX(outputs, j, left, right), top))
 
         for i in range(len(inputs)):
-            x = Visualizer.getNodeX(inputs, i, left, right) + 200
+            x = Visualizer.getNodeX(inputs, i, left, right)
             pygame.draw.circle(screen, (0,0,0), (x, bottom), nodeRadius)
             pygame.draw.circle(screen, getRGBA(inputs[i]), (x, bottom), nodeRadius * 0.6)
             
 
         for i in range(len(outputs)):
                 # Draw the text surface onto the Pygame display surface at coordinates (100, 100)
-            x = (Visualizer.getNodeX(outputs, i, left, right)) + 200
+            x = (Visualizer.getNodeX(outputs, i, left, right))
             pygame.draw.circle(screen, (0,0,0), (x, top), nodeRadius)
             pygame.draw.circle(screen, getRGBA(outputs[i]), (x, top), nodeRadius * 0.6)
             pygame.draw.circle(screen, getRGBA(biases[i]), (x, top), nodeRadius * 0.8, 2)

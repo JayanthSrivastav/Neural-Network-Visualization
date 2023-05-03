@@ -142,7 +142,7 @@ class Car:
             self.sensor.draw(screen)
         
         temp_rotated_image = pygame.transform.rotate(self.carImage, math.degrees(self.angle))
-        carImage_rect = self.carImage.get_rect(center = (self.width/2 + self.x, self.height/2 + translateY(self.y)))
+        carImage_rect = self.carImage.get_rect(center = (self.width/2 + self.x + 400, self.height/2 + translateY(self.y)))
         rotated_rect = temp_rotated_image.get_rect(center = carImage_rect.center)
         screen.blit(temp_rotated_image, rotated_rect)
 
