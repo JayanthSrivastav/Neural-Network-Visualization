@@ -58,5 +58,5 @@ class Sensor:
             end = self.rays[i][1]
             if self.readings[i]:
                 end = self.readings[i]
-            pygame.draw.line(screen, (0, 0, 0), (end[0], end[1]), (self.rays[i][1][0], self.rays[i][1][1]), 2)
-            pygame.draw.line(screen, (230, 185, 90), (self.rays[i][0][0], self.rays[i][0][1]), (end[0], end[1]), 2)
+            pygame.draw.line(screen, (0, 0, 0), (end[0]+400, end[1]), (self.rays[i][1][0]+400, self.rays[i][1][1]), 2)
+            pygame.draw.line(screen, (230, 185, 90), (self.rays[i][0][0]+400, self.rays[i][0][1]), (end[0]+400, end[1]), 2)
