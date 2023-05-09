@@ -1,14 +1,16 @@
-import pygame
+#import pygame
 from car import *
 from road import *
 from visualizer import *
 import pickle
 from text import *
+import os
 
 
 showOnlyBestCar = 0
 randomInfiniteTraffic = 1
-carsPerGeneration = 1000
+carsPerGeneration = 200
+contType = 1
 
 genNumber = 0
 alive = carsPerGeneration
@@ -16,8 +18,11 @@ showSensors = True
 
 def generateCars(N):
     cars = []
-    for i in range(1, N+1):
-        cars.append( Car(road.getLaneCenter(1),100,30,50,"AI"))
+    if contType == 0:
+        cars.append( Car(road.getLaneCenter(1),100,30,50,"KEYS"))
+    else:
+        for i in range(1, N+1):
+            cars.append( Car(road.getLaneCenter(1),100,30,50,"AI"))
     return cars
 
 def save():
@@ -31,7 +36,7 @@ def save():
 def discard():
     pass
 
-def reset():
+def next_gen():
     global cars, traffic, genNumber
     cars = []
     if showOnlyBestCar:
@@ -67,6 +72,28 @@ def reset():
         Car(road.getLaneCenter(1), -600, 30, 50, "DUMMY", 2),
     ]
 
+def reset():
+    global cars, traffic, genNumber
+    cars = []
+    if showOnlyBestCar:
+        cars = generateCars(1)
+    else:
+        cars = generateCars(carsPerGeneration)
+    bestCar = cars[0]
+
+    # All the cars in the traffic will be in this array
+    traffic = [
+        Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2),
+        Car(road.getLaneCenter(0), -200, 30, 50, "DUMMY", 2),
+        Car(road.getLaneCenter(2), -300, 30, 50, "DUMMY", 2),
+        Car(road.getLaneCenter(0), -500, 30, 50, "DUMMY", 2),
+        Car(road.getLaneCenter(1), -600, 30, 50, "DUMMY", 2),
+    ]
+
+    f = open("genDat.txt","w")
+    f.write(str(0))
+    f.close()
+
 
 # initialize Pygame
 pygame.init()
@@ -89,25 +116,27 @@ if showOnlyBestCar:
 else:
     cars = generateCars(carsPerGeneration)
 bestCar = cars[0]
-try:
-    with open("bestCar.pickle", "rb") as f:
-        bestCar.brain = pickle.load(f)
-    f = open("genDat.txt", "r")
-    genNumber = int(f.read())
-    f.close()
-    for i in range(len(cars)):
-        for l in range(len(cars[i].brain.levels)):
-            cars[i].brain.levels[l].inputs = bestCar.brain.levels[l].inputs.copy()
-            cars[i].brain.levels[l].outputs = bestCar.brain.levels[l].outputs.copy()
-            cars[i].brain.levels[l].biases = bestCar.brain.levels[l].biases.copy()
-            for w in range(len(cars[i].brain.levels[l].weights)):
-                cars[i].brain.levels[l].weights[w] = bestCar.brain.levels[l].weights[w].copy()
-        if i != 0:
-            NeuralNetwork.mutate(cars[i].brain, 0.1)
-    
-    print(len(cars))
-except:
-    print("Failed")
+
+if os.path.exists("bestCar.pickle"):
+    try:
+        with open("bestCar.pickle", "rb") as f:
+            bestCar.brain = pickle.load(f)
+        f = open("genDat.txt", "r")
+        genNumber = int(f.read())
+        f.close()
+        for i in range(len(cars)):
+            for l in range(len(cars[i].brain.levels)):
+                cars[i].brain.levels[l].inputs = bestCar.brain.levels[l].inputs.copy()
+                cars[i].brain.levels[l].outputs = bestCar.brain.levels[l].outputs.copy()
+                cars[i].brain.levels[l].biases = bestCar.brain.levels[l].biases.copy()
+                for w in range(len(cars[i].brain.levels[l].weights)):
+                    cars[i].brain.levels[l].weights[w] = bestCar.brain.levels[l].weights[w].copy()
+            if i != 0:
+                NeuralNetwork.mutate(cars[i].brain, 0.1)
+        
+        print(len(cars))
+    except:
+        print("Failed")
 
 # All the cars in the traffic will be in this array
 traffic = [
@@ -133,13 +162,23 @@ while not done:
                 save()
             if event.key == pygame.K_d:
                 discard()
+            if event.key == pygame.K_n:
+                #save()
+                next_gen()
             if event.key == pygame.K_r:
                 reset()
             if event.key == pygame.K_l:
                 showSensors = not showSensors
+            if event.key == pygame.K_k:
+                contType = not contType
+                if not contType:
+                    showOnlyBestCar = 1
+                else:
+                    showOnlyBestCar = 0
+                # reset()
             if event.key == pygame.K_b:
                 showOnlyBestCar = not showOnlyBestCar
-                reset()
+                #next_gen()
             if event.key == pygame.K_t:
                 randomInfiniteTraffic = not randomInfiniteTraffic
 
@@ -166,6 +205,7 @@ while not done:
     
     yMin = 1000000
     alive = carsPerGeneration
+    
     for car in cars:
         if car.damaged:
             alive -= 1
@@ -175,9 +215,10 @@ while not done:
         # Check collisions with borders
         car.update(road.borders, traffic)
         # Draw the car on the screen
-        car.carImage.set_alpha(50)
-        # Draw the car on the screen
-        car.draw(screen)
+        if not showOnlyBestCar:
+            car.carImage.set_alpha(50)
+            # Draw the car on the screen
+            car.draw(screen)
         
     # Draw the best car on the screen
     bestCar.carImage.set_alpha(255)
@@ -193,7 +234,7 @@ while not done:
     # pygame.draw.rect(screen, button_color, button_rect)
     # screen.blit(text, text_rect)
     
-    displayTexts(screen, genNumber, carsPerGeneration, alive, showSensors, showOnlyBestCar, randomInfiniteTraffic)
+    displayTexts(screen, genNumber, carsPerGeneration, alive, showSensors, showOnlyBestCar, randomInfiniteTraffic, contType)
 
     # update screen
     pygame.display.flip()
