@@ -175,7 +175,7 @@ while not done:
                     showOnlyBestCar = 1
                 else:
                     showOnlyBestCar = 0
-                # reset()
+                reset()
             if event.key == pygame.K_b:
                 showOnlyBestCar = not showOnlyBestCar
                 #next_gen()
