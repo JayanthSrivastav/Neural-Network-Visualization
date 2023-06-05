@@ -17,6 +17,7 @@
 
 ### Running the project
 Step 1: Make sure all the required modules are installed.
+
 Step 2: Execute main.py.
  
 ### Controlling the Environment and the Network
